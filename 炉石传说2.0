@@ -1,0 +1,213 @@
+package temp;
+import java.util.Scanner;
+//import javax.swing.*;
+import java.util.LinkedList;
+import java.util.*;
+class monster
+{
+	int health,attack;
+	int name;
+	int cost;
+	public monster(int h,int a,int n,int c)
+	{
+		health=h;
+		attack=a;
+		name=n;
+		cost=c;
+	} 
+	void setCode(int c)
+	{
+		if(c>10)
+			c=10;
+		cost=c;
+			
+	}
+}
+public class exp {
+	public static void print(List<monster>temp1,List<monster> temp2)
+	{
+		System.out.println("player 1 has on hand:");
+		output(temp1);
+		System.out.println("player 2 had on hand:");
+		output(temp2);
+	}
+	public static void print2(List<monster>temp1,List<monster>temp2)
+	{
+		System.out.println("player 1 has on war:");
+		output(temp1);
+		System.out.println("player 2 has on war:");
+		output(temp2);
+	}
+	
+	public static void output(List<monster> temp)
+	{
+		for(int i=0;i<temp.size();i++)
+		{
+			System.out.println("name:"+temp.get(i).name+" health:"+temp.get(i).health+" attack"+temp.get(i).attack+" cost"+temp.get(i).cost);
+		}
+	}
+
+	public static int[]arrGet(int ArryLength,int RandLength)
+	{
+		int[]x = new int[ArryLength];
+		for(int i=0;i<x.length;i++)
+		{
+			int nextInt=0;
+			while(nextInt==0)
+			{
+				nextInt=new Random().nextInt(RandLength);
+			}
+			x[i]=nextInt;
+		}
+		return x;
+	}
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Scanner sc=new Scanner (System.in);
+		
+		int health,attack;
+		int num1,num2;
+		int pos;
+		Queue<monster> tt1=new LinkedList<>();
+		Queue<monster> tt2=new LinkedList<>();
+		List<monster> temp1=new LinkedList<>();
+		List<monster> temp2=new LinkedList<>();
+		List<monster> att1=new LinkedList<>();
+		List<monster> att2=new LinkedList<>();
+		int []ints1=arrGet(30,30);
+		int []ints2=arrGet(30,30);
+		temp1.add(new monster(30,0,0,0));
+		temp2.add(new monster(30,0,0,0));
+		
+		//produce monster queue
+		for(int i=0;i<30;i++)
+		{
+			int nu1=0,nu2=0,nu3=0;
+			while (nu1==0)
+				nu1=new Random().nextInt(10);
+			while(nu2==0)
+				nu2=new Random().nextInt(10);
+			while(nu3==0)
+				nu3=new Random().nextInt(5);
+			tt1.add(new monster(nu1,nu2,ints1[i],nu3));
+			nu1=nu2=nu3=0;
+			while(nu1==0)
+				nu1=new Random().nextInt(10);
+		    while(nu2==0)
+		    	nu2=new Random().nextInt(10);
+		    while(nu3==0)
+		    	nu3=new Random().nextInt(5);
+			tt2.add(new monster(nu1,nu2,ints2[i],nu3));
+			//System.out.println(ints1[i]);
+			//System.out.println(ints2[i]);
+		}
+	
+		for(int i=0;i<3;i++)
+		{
+			monster cp1=tt1.peek();
+			monster cp2=tt2.peek();
+			temp1.add(cp1);
+			temp2.add(cp2);
+			tt1.remove();
+			tt2.remove();
+		}
+		
+		print(temp1,temp2);
+		boolean tag=true;
+		int t=sc.nextInt();
+		for(int i=1;i<=t;i++)
+		{
+			String command;
+			int energy=i;
+			while(true)
+			{
+				command=sc.next();
+				if(command.equals("ends"))
+					break;
+				if(command.equals("summon"))
+				{
+					pos=sc.nextInt();
+					//attack=sc.nextInt();
+					//health=sc.nextInt();
+					if(tag)
+					{
+						monster cp=tt1.element();
+						temp1.add(cp);
+						tt1.remove();
+						int j;
+						for(j=1;j<temp1.size();j++)
+							if(energy>=temp1.get(j).cost)
+							{
+								energy-=temp1.get(j).cost;
+								System.out.println("Player 1 succeed creating and has energy "+energy);
+								att1.add(temp1.get(j));
+								//temp1.add(pos,new monster(cp.health,cp.attack,cp.name,cp.cost));
+								temp1.remove(j);
+								break;
+							}
+					
+						if(j==temp1.size())
+						{
+							System.out.println("Player 1 fail to creat and has energy "+energy);
+						}
+						//tt1.add(cp);
+					}
+					else
+					{
+						monster cp=tt2.element();
+						temp2.add(cp);
+						tt2.remove();
+						int j;
+						for(j=1;j<temp2.size();j++)
+							if(energy>=temp2.get(j).cost)
+							{
+								energy-=temp2.get(j).cost;
+								System.out.println("Player 2 succeed creating and has energy "+energy);
+								att2.add(temp2.get(j));
+								//temp1.add(pos,new monster(cp.health,cp.attack,cp.name,cp.cost));
+								temp2.remove(j);
+								break;
+							}
+					
+						if(j==temp2.size())
+						{
+							System.out.println("Player 2 fail to creat and has energy "+energy);
+						}
+						//tt2.add(cp);
+					}
+				}
+				// 法力
+				else if(command.equals("attack"))
+				{
+					num1=sc.nextInt();
+					num2=sc.nextInt();
+					if(!tag)
+					{
+						int copy=num2;
+						num1=num2;
+						num2=copy;
+					}
+					if(num1>att1.size()||num2>att2.size())
+						continue;
+					att1.get(num1).health-=att2.get(num2).attack;
+					att2.get(num2).health-=att1.get(num1).attack;
+					if(att1.get(num1).health<=0&&num1!=0)
+					{
+						att1.remove(num1);
+						tt1.add(att1.get(num1));
+					}
+					if(att2.get(num2).health<=0&&num2!=0)
+					{
+						att2.remove(num2);
+						tt2.add(att2.get(num2));
+					}
+				}
+			}
+			tag=!tag;
+			print2(att1,att2);
+			print(temp1,temp2);
+			
+		}
+	}
+
+}
