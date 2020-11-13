@@ -1,0 +1,151 @@
+package temp;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Scanner;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.List;
+import java.util.Map;
+import java.io.FileInputStream;
+import java.util.HashMap;
+import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.Comparator;
+import java.util.ArrayList;
+import java.util.Queue;
+import java.util.*;
+class member
+{
+	String school;
+	//String name;
+	double code;
+	int num;
+	member(){
+		school=null;
+		code=0;
+		num=0;
+	}
+	member(String s,double c)
+	{
+		school=s;
+		code=c;
+		num=0;
+	}
+}
+public class Main {
+	
+	public static String txt2String(File file)
+	{
+		StringBuilder result = new StringBuilder();
+		try {
+			InputStreamReader read = new InputStreamReader(new FileInputStream(file),"UTF-8");
+			BufferedReader br =new BufferedReader(read);
+			String s =null;
+			while((s=br.readLine())!=null)
+			{
+				result.append(System.lineSeparator()+s);
+			}
+			br.close();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return result.toString();
+	}
+	public static int check(member t[],String temp,int c)
+	{
+		//int len=t.length;
+		for(int i=0;i<c;i++)
+		{
+			if(t[i].school.equals(temp))
+				return i;
+		}
+		return -1;
+	}
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		//Scanner sc=new Scanner(System.in);
+		File file=new File("C:\\Users\\86134\\Desktop\\数据.txt");
+		//long len=txt2String(file).length();
+		//System.out.println(len);
+		String temp=txt2String(file);
+		//System.out.println(temp);
+		String []result=temp.split("</span></span></td>");
+		//Queue<member> text=new LinkedList<>(idcomparator);
+		member []rr=new member[1000];
+		
+		int count=0;
+		for(int i=0;i<result.length;i++)
+		{
+			//system("pause");
+			String []copy=result[i].split("</td><td class=\"text-start\">");
+			String school=copy[2];
+			//System.out.println(school);
+			double code=Double.parseDouble(copy[3]);
+			//System.out.println(code);
+			int tag=check(rr,school,count);
+			if(tag!=-1)
+			{
+				if(rr[tag].num>=5)
+					continue;
+				else
+				{
+					rr[tag].code=rr[tag].code+code;
+					rr[tag].num++;
+				}
+				
+			}
+			else
+			{
+				//rr[count]=new memeber;
+				if(rr[count]==null)
+					rr[count]=new member();
+				//System.out.println(count);
+				rr[count].school=school;
+				rr[count].code=code;
+				rr[count].num++;
+				count++;
+			}	
+		}
+		for(int i=0;i<count-1;i++)
+		{
+			for(int j=i+1;j<count;j++)
+			{
+				if(rr[i].code<rr[j].code)
+				{
+					String cscho;
+					double ccode;
+					ccode=rr[i].code;
+					cscho=rr[i].school;
+					rr[i].code=rr[j].code;
+					rr[i].school=rr[j].school;
+					rr[j].code=ccode;
+					rr[j].school=cscho;
+				}
+			}
+		}
+		for(int i=0;i<20;i++)
+		{
+			System.out.println("第"+(i+1)+"名："+rr[i].school+" "+rr[i].code);
+		}
+		for(int i=0;i<count;i++)
+		{
+			if(rr[i].school.equals("深圳大学"))
+			{
+				System.out.println("深圳大学排"+(i+1)+"总分为"+rr[i].code);
+			}
+		}
+		//System.out.println(temp);
+		//member<List>=new LinkedList<>();
+		//System.out.println(txt2String(file));
+		
+		
+	}
+
+}
