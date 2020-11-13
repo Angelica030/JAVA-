@@ -1,0 +1,104 @@
+package lscs;
+import java.awt.BorderLayout;
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.border.Border;
+import java.util.*;
+public class version extends JFrame{
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		version temp = new version();
+		Scanner sc=new Scanner(System.in);
+		int times=sc.nextInt();
+		//for(int i=0;i<times;i++)
+			//gamedoing(i);
+		//JPanel jj1;
+		//jj1=new JPanel();
+		//temp.creatGame();
+		
+	}
+	public void gamedoing(int num)
+	{
+		
+	}
+	class disappear implements ActionListener{
+		
+	}
+	public void creatGame()
+	{
+		int num1=0,num2=0;
+		JPanel player1;
+		player1=new JPanel();
+		for(int i=0;i<3;i++)
+		{
+			num1=num2=0;
+			int name=new Random().nextInt(30);
+			Button cl=new Button("monsterA"+String.valueOf(name));
+			cl.addActionListener(disapprear);
+			while(num1==0)
+				num1=new Random().nextInt(10);
+			while(num2==0)
+				num2=new Random().nextInt(10);
+			TextField tl=new TextField(4);
+			tl.setText(String.valueOf(num1)+"/"+String.valueOf(num2));
+			player1.add(cl);
+			player1.add(tl);
+		}
+
+		this.add(player1,BorderLayout.PAGE_END);
+		JPanel player2;
+		player2=new JPanel();
+		for(int i=0;i<3;i++)
+		{
+			num1=num2=0;
+			int name=new Random().nextInt(30);
+			Button cl=new Button("monsterB"+String.valueOf(name));
+			while(num1==0)
+				num1=new Random().nextInt(10);
+			while(num2==0)
+				num2=new Random().nextInt(10);
+			TextField tl=new TextField(4);
+			tl.setText(String.valueOf(num1)+"/"+String.valueOf(num2));
+			player2.add(cl);
+			player2.add(tl);
+		}
+		this.add(player2,BorderLayout.PAGE_START);
+	}
+	public version() {
+		this.setTitle("炉石传说");
+		//this.imageUpdate(img, infoflags, x, y, w, h)
+		JPanel jp1,jp2,jp3;
+		jp1=new JPanel();
+		jp2=new JPanel();
+		jp3=new JPanel();
+		Button tf1,tf2;
+		tf1=new Button("shopper");
+		tf2=new Button("I");
+		
+		jp2.add(tf1);
+		jp3.add(tf2);
+		
+		this.setLocation(400,300);
+		//设置窗口x,y坐标
+		this.setSize(1000,800);
+		//设置窗口大小
+		
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		JButton clickcard1,clickcard2,endTurn;
+		endTurn = new JButton("结束回合");
+		clickcard1 = new JButton("playerA's cards");
+		clickcard2 = new JButton("playerB's cards");
+		jp2.add(clickcard1);
+		jp3.add(clickcard2);
+		jp1.add(endTurn);
+		this.add(jp2,BorderLayout.EAST);
+		this.add(jp3,BorderLayout.WEST);
+		this.add(jp1,BorderLayout.CENTER);
+		
+		this.setVisible(true);
+		this.creatGame();
+		this.setResizable(false);
+	}
+	
+}
