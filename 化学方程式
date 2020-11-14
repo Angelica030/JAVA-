@@ -1,0 +1,163 @@
+package temp;
+import java.util.*;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.Scanner;
+//import java.io.*;
+public class Main {
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Scanner sc=new Scanner(System.in);
+		//String command;
+		int n=sc.nextInt();
+		sc.nextLine();
+		while(n-->0)
+		{
+			if(isEqualElement(sc.nextLine()))
+				System.out.println("Y");
+			else
+				System.out.println("N");	
+			
+		}
+		sc.close();
+	}
+	
+	public static boolean isEqualElement(String s)
+	{
+		String []temp=s.split("=");
+		String left_temp=temp[0];
+		String right_temp=temp[1];
+		
+		Map<String, Integer> left_record= cutExpression(left_temp);
+		Map<String, Integer> right_record=cutExpression(right_temp);
+		if(left_record.equals(right_record))
+			return true;
+		else
+			return false;
+	}
+	
+	public static Map<String,Integer> cutExpression(String s)
+	{
+		 Map<String, Integer> map = new HashMap<>();
+		 Map<String, Integer> cur =new HashMap<>();
+		 
+		 String []text=s.split("\\+");
+		 for(String texts:text)
+		 {
+			 int tag=0;
+			 while(tag<texts.length() &&texts.charAt(tag)>='0'&&texts.charAt(tag)<='9')
+				 tag++;
+			 int coef =tag==0?1:Integer.parseInt(texts.substring(0,tag));
+			 cur= analyzeElement(texts.substring(tag),coef);
+			 
+			 Set<Entry<String, Integer>> set =cur.entrySet();
+			 for(Entry<String, Integer> item :set)
+			 {
+				 String key=item.getKey();
+				 int val = item.getValue();
+				 if(map.containsKey(key))
+					 map.put(key, map.get(key)+val);
+				 else
+					 map.put(key,val);
+				 
+			 }
+		 }
+		 return map;
+	}
+	
+	public static Map<String, Integer> analyzeElement(String s,int num)
+	{
+		Map<String, Integer> map =new HashMap<>();
+		if(s.isEmpty())
+			return map;
+		
+		if(s.charAt(0)=='(')
+		{
+			int balance =1;
+			int loc=1;
+			while(balance>0) {
+				if(s.charAt(loc)=='(')
+					balance++;
+				else if(s.charAt(loc)==')')
+					balance--;
+				loc++;
+			}
+			
+			int right =loc;
+			while(loc<s.length() &&s.charAt(loc)>='0'&&s.charAt(loc)<='9')
+				loc++;
+			int coef = loc==right?1:Integer.parseInt(s.substring(right,loc));
+			
+			Map<String, Integer> cur=new HashMap<>();
+			Set<Entry<String,Integer>> set;
+			
+			cur =analyzeElement(s.substring(1,right-1),num*coef);
+			set =cur.entrySet();
+			for(Entry<String, Integer> item:set)
+			{
+				String key=item.getKey();
+				int val=item.getValue();
+				if(map.containsKey(key))
+					map.put(key, map.get(key)+val);
+				else
+					map.put(key, val);
+				
+			}
+			
+			cur=analyzeElement(s.substring(loc),num);
+			set =cur.entrySet();
+			for(Entry<String, Integer> item :set)
+			{
+				String key=item.getKey();
+				int val =item.getValue();
+				if(map.containsKey(key))
+					map.put(key, map.get(key)+val);
+				else
+					map.put(key, val);
+			}
+		}
+		else
+		{
+			String key;
+			int loc=1;
+			if(s.length()>1&&s.charAt(1)>='a'&&s.charAt(1)<='z')
+			{
+				key=s.substring(0,2);
+				loc=2;
+			}
+			else
+				key=s.substring(0,1);
+			
+			int right=loc;
+			while(loc<s.length()&&s.charAt(loc)>='0'&&s.charAt(loc)<='9')
+			{
+				loc++;
+			}
+			int coef=loc==right?1:Integer.parseInt(s.substring(right,loc));
+			if(map.containsKey(key))
+				map.put(key, map.get(key)+coef*num);
+			else
+				map.put(key,coef*num);
+			
+			Map<String, Integer> cur=new HashMap<>();
+			Set<Entry<String, Integer>> set;
+			
+			cur=analyzeElement(s.substring(loc), num);
+			set=cur.entrySet();
+			for(Entry<String, Integer> item:set)
+			{
+				key=item.getKey();
+				int val=item.getValue();
+				if(map.containsKey(key))
+					map.put(key, map.get(key)+val);
+				else
+					map.put(key, val);
+			}
+		}
+		return map;
+		
+	}
+}
