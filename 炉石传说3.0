@@ -1,104 +1,305 @@
 package lscs;
-import java.awt.BorderLayout;
-import java.awt.*;
-import javax.swing.*;
-import javax.swing.border.Border;
-import java.util.*;
-public class version extends JFrame{
 
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Random;
+import java.util.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+public class temp extends JFrame implements ActionListener{
+	JFrame frame;
+	JPanel oppsite;
+	JPanel myroom;
+	JPanel warpart;
+	JPanel turnShow;
+	JPanel turnCh;
+	JButton changeturn;
+	JLabel turnname;
+	JLabel result;
+	JLabel waste;
+	
+	boolean tag;
+	static int count=0;
+	game te=new game();
+	war War=new war();
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		version temp = new version();
-		Scanner sc=new Scanner(System.in);
-		int times=sc.nextInt();
-		//for(int i=0;i<times;i++)
-			//gamedoing(i);
-		//JPanel jj1;
-		//jj1=new JPanel();
-		//temp.creatGame();
+		//te= new game();
+		temp T=new temp();
 		
+		//String command;
+		T.go();
 	}
-	public void gamedoing(int num)
-	{
-		
-	}
-	class disappear implements ActionListener{
-		
-	}
-	public void creatGame()
-	{
-		int num1=0,num2=0;
-		JPanel player1;
-		player1=new JPanel();
-		for(int i=0;i<3;i++)
+	class card implements ActionListener{
+		JButton pre[]=new JButton[8];
+		String name;
+		int cardsize=8;
+		public card(String s)
 		{
-			num1=num2=0;
-			int name=new Random().nextInt(30);
-			Button cl=new Button("monsterA"+String.valueOf(name));
-			cl.addActionListener(disapprear);
-			while(num1==0)
-				num1=new Random().nextInt(10);
-			while(num2==0)
-				num2=new Random().nextInt(10);
-			TextField tl=new TextField(4);
-			tl.setText(String.valueOf(num1)+"/"+String.valueOf(num2));
-			player1.add(cl);
-			player1.add(tl);
+			name=s;
+			for(int i=0;i<8;i++)
+			{
+				pre[i]=new JButton();
+				pre[i].setText("空");
+				pre[i].addActionListener(this);
+			}
+			
 		}
-
-		this.add(player1,BorderLayout.PAGE_END);
-		JPanel player2;
-		player2=new JPanel();
-		for(int i=0;i<3;i++)
+		public void addEle(JPanel C)
 		{
-			num1=num2=0;
-			int name=new Random().nextInt(30);
-			Button cl=new Button("monsterB"+String.valueOf(name));
-			while(num1==0)
-				num1=new Random().nextInt(10);
-			while(num2==0)
-				num2=new Random().nextInt(10);
-			TextField tl=new TextField(4);
-			tl.setText(String.valueOf(num1)+"/"+String.valueOf(num2));
-			player2.add(cl);
-			player2.add(tl);
+			if(C!=null)
+				for(int i=0;i<8;i++)
+					C.add(pre[i]);
 		}
-		this.add(player2,BorderLayout.PAGE_START);
+		public void change(int i,String T)//
+		{
+			pre[i].setText(T);
+		}
+		public int checkEm()
+		{
+			for(int i=0;i<8;i++)
+			{
+				if(pre[i].getText().equals("空"))
+					return i;
+			}
+			return -1;
+		}
+		public int findEm(String T)
+		{
+			for(int i=0;i<cardsize;i++)
+				if(pre[i].getText().equals(T))
+					return i;
+			return -1;
+		}
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			if(name.equals("handcard1"))
+			{
+				int pos=War.cc1.checkEm();
+				if(pos>=0)
+				{
+					War.cc1.pre[pos].setText(e.getActionCommand());
+					pos=findEm(e.getActionCommand());
+					//System.out.println(pos);
+					if(pos>=0)
+					{
+						pre[pos].setText("空");
+					}
+				}	
+			}
+			else if(name.equals("handcard2"))
+			{
+				int pos=War.cc2.checkEm();
+				if(pos>=0)
+				{
+					War.cc2.pre[pos].setText(e.getActionCommand());
+					pos=findEm(e.getActionCommand());
+					//System.out.println(pos);
+					if(pos>=0)
+					{
+						pre[pos].setText("空");
+					}
+				}	
+			}
+			else if(name.equals("warcard1"))
+			{
+				int pos=findEm(e.getActionCommand());
+				if(pos>=0)
+				{
+					pre[pos].setText("空");
+					num1++;
+					lplcard1.setText("剩余牌数"+num1);
+				}
+			}
+			else if(name.equals("warcard2"))
+			{
+				int pos=findEm(e.getActionCommand());
+				if(pos>=0)
+				{
+					pre[pos].setText("空");
+					num2++;
+					lplcard2.setText("剩余牌数"+num2);
+				}
+			}
+		}
+	} 
+	//选手
+	class player{
+		card cc;
+		JLabel heap=new JLabel();
+		JLabel tit=new JLabel();
+		JLabel opp=new JLabel();
+		
+		public player(String T,String P)
+		{
+			heap.setText("HP值:30");
+			cc=new card(P);
+			
+			opp.setText(T);
+		}
+		public void addEle(JPanel T)
+		{
+			cc.addEle(T);
+			T.add(tit);
+			T.add(heap);
+			T.add(opp);
+		}
+		
 	}
-	public version() {
-		this.setTitle("炉石传说");
-		//this.imageUpdate(img, infoflags, x, y, w, h)
-		JPanel jp1,jp2,jp3;
-		jp1=new JPanel();
-		jp2=new JPanel();
-		jp3=new JPanel();
-		Button tf1,tf2;
-		tf1=new Button("shopper");
-		tf2=new Button("I");
+	//赛场两方选手
+	class game{
+		JPanel oppsite;
+		JPanel myroom;
+		player play1;
+		player play2;
+		public game()
+		{
+			oppsite=new JPanel();
+			play1=new player("A","handcard1");
+			play1.addEle(oppsite);
+			
+			myroom=new JPanel();
+			play2=new player("B","handcard2");
+			play2.addEle(myroom);
+		}
+		public void orginal(JFrame T)
+		{
+			T.getContentPane().add(myroom,BorderLayout.SOUTH);
+			T.getContentPane().add(oppsite,BorderLayout.NORTH);
+		}
+	}
+	//记录战场牌
+	class war{
+		JPanel oppsite;
+		JPanel myroom;
+		card cc1=new card("warcard1");
+		card cc2=new card("warcard2");
+		JLabel plwar11=new JLabel();
+		JLabel plwar22=new JLabel();
+		public war()
+		{
+			oppsite=new JPanel();
+			myroom=new JPanel();
+			cc1.addEle(oppsite);
+			cc2.addEle(myroom);
+			plwar11.setText("this is opp's warcard");
+			plwar22.setText("this is my warcard");
+			oppsite.add(plwar11);
+			myroom.add(plwar22);
+		}
+		public void addEle(JPanel T)
+		{
+			T.add(oppsite,BorderLayout.CENTER);
+			T.add(myroom,BorderLayout.CENTER);
+		}
+		public int getEmcc1()
+		{
+			return cc1.checkEm();
+				
+		}
+		public int getEmcc2()
+		{
+			return cc2.checkEm();
+		}
+	}
+	
+	JButton plcard1,plcard2;
+	JLabel lplcard1,lplcard2;
+	static int num1=30;
+	static int num2=30;
+	public temp()
+	{
+		frame=new JFrame();
+		tag=true;
+		//frame.setLayout(new BorderLayout());
+		te.orginal(frame);
 		
-		jp2.add(tf1);
-		jp3.add(tf2);
+		turnShow=new JPanel();
+		turnname=new JLabel();
+		turnname.setText("回合"+count);
+		turnShow.add(turnname);
+		frame.getContentPane().add(turnShow,BorderLayout.WEST);
 		
-		this.setLocation(400,300);
-		//设置窗口x,y坐标
-		this.setSize(1000,800);
-		//设置窗口大小
+		turnCh=new JPanel();
+		plcard1=new JButton();
+		plcard1.setText("opponate's cards");
+		plcard1.addActionListener(this);
+		lplcard1=new JLabel();
+		lplcard1.setText("剩余牌数"+num1);
 		
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		JButton clickcard1,clickcard2,endTurn;
-		endTurn = new JButton("结束回合");
-		clickcard1 = new JButton("playerA's cards");
-		clickcard2 = new JButton("playerB's cards");
-		jp2.add(clickcard1);
-		jp3.add(clickcard2);
-		jp1.add(endTurn);
-		this.add(jp2,BorderLayout.EAST);
-		this.add(jp3,BorderLayout.WEST);
-		this.add(jp1,BorderLayout.CENTER);
+		plcard2=new JButton();
+		plcard2.setText("my cards");
+		plcard2.addActionListener(this);
+		lplcard2=new JLabel();
+		lplcard2.setText("剩余牌数"+num2);
+		changeturn=new JButton();
+		changeturn.setText("回合结束");
+		turnCh.add(plcard1);
+		turnCh.add(lplcard1);
+		turnCh.add(changeturn);
+		turnCh.add(plcard2);
+		turnCh.add(lplcard2);
+		frame.getContentPane().add(turnCh,BorderLayout.EAST);
 		
-		this.setVisible(true);
-		this.creatGame();
-		this.setResizable(false);
+		warpart=new JPanel();
+		War.addEle(warpart);
+		frame.getContentPane().add(warpart,BorderLayout.CENTER);
+		
+		frame.setSize(2000,300);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setResizable(false);
+		frame.setVisible(true);
+	}
+	public void go()
+	{
+		changeturn.addActionListener(this);
+	}
+	public void actionPerformed(ActionEvent event)
+	{
+		if(event.getSource()==changeturn)
+		{
+			count++;
+			turnname.setText("回合"+count);
+			tag=!tag;
+		}
+		else if(event.getSource()==plcard1)//opponent card chouqu
+		{
+			num1--;
+			lplcard1.setText("剩余牌数"+num1);
+			int health=0,attack=0,namval=0,pos;
+			String name;
+			while(health==0)
+				health=new Random().nextInt(10);
+			while(attack==0)
+				attack=new Random().nextInt(10);
+			while(namval==0)
+				namval=new Random().nextInt(30);
+			name="monster"+namval+" health: "+health+" attack: "+attack;
+			pos=te.play1.cc.checkEm();
+			te.play1.cc.change(pos, name);
+		}
+		else if(event.getSource()==plcard2)
+		{
+			num2--;
+			lplcard2.setText("剩余牌数"+num2);
+			int health=0,attack=0,namval=0,pos;
+			String name;
+			while(health==0)
+				health=new Random().nextInt(10);
+			while(attack==0)
+				attack=new Random().nextInt(10);
+			while(namval==0)
+				namval=new Random().nextInt(30);
+			name="monster"+namval+" health: "+health+" attack: "+attack;
+			pos=te.play2.cc.checkEm();
+			te.play2.cc.change(pos, name);
+		}
+		
 	}
 	
 }
